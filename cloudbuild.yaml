@@ -17,4 +17,4 @@ steps:
     args: ['gcloud', 'run', 'deploy', 'helloworld-${SHORT_SHA}', 
            '--image=us-central1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/myimage:${SHORT_SHA}', 
            '--region', 'northamerica-northeast1', '--platform', 'managed', 
-           '--allow-unauthenticated','--service-account','607966590347-compute@developer.gserviceaccount.com']
+           '--allow-unauthenticated','--service-account','607966590347@cloudbuild.gserviceaccount.com']
