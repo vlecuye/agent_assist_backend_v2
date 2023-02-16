@@ -1,0 +1,19 @@
+# Install dependencies
+  - name: python
+    entrypoint: pip
+    args: ["install", "-r", "requirements.txt"]
+    # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/myimage:${SHORT_SHA}', '.']
+
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push',  'northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/myimage:${SHORT_SHA}']
+
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args: ['gcloud', 'run', 'deploy', 'helloworld-${SHORT_SHA}', 
+           '--image=us-central1-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/myimage:${SHORT_SHA}', 
+           '--region', 'northamerica-northeast1', '--platform', 'managed', 
+           '--allow-unauthenticated']
