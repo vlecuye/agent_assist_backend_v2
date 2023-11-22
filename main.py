@@ -102,7 +102,7 @@ def _analyze_content(participant_id, content,contentType):
     else : 
         request=dialogflow.StreamingAnalyzeContentRequest(
             participant=participant_id,
-            audio_config=dialogflow.InputAudioConfig(audio_encoding=dialogflow.AudioEncoding.AUDIO_ENCODING_OGG_OPUS,sample_rate_hertz=48000,language_code="fr-ca"))
+            audio_config=dialogflow.InputAudioConfig(audio_encoding=dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16,sample_rate_hertz=48000,language_code="fr-ca"))
         bytes = content.read()
         request2=dialogflow.StreamingAnalyzeContentRequest(input_audio=bytes)                                    
 
@@ -128,7 +128,11 @@ def _analyze_content(participant_id, content,contentType):
             print(agent_response)
             for richContentResponses in agent_response.payload.get('richContent') :
                 for richContentResponse in richContentResponses : 
-                    citations = richContentResponse.get('citations')
+                    
+                    if richContentResponse.get('type')== 'match_citations':
+                        citations = richContentResponse.get('citations')
+                    else:
+                        citations = [richContentResponse]
                     for citation in citations :
                         article = {}
                         article['title'] = citation.get('title')
